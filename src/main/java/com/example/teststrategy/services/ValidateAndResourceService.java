@@ -133,13 +133,18 @@ public class ValidateAndResourceService {
 
     }
     public void conflict(){
+        String secondMessage;
+        int value = 27;
+        int addition = 2;
+        int count = 1;
         String message;
-        int count = 0;
-        int value = 30;
         count++;
+        addition--;
         count++;
+        int newValue = count * value + addition;
         value = count * value;
-        message = "count times value equals: " + value;
-        System.out.println(message);
+        secondMessage = ". old count" + value;
+        message = "count times value equals: " + newValue;
+        System.out.println(secondMessage + message);
     }
 }
