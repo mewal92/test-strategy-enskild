@@ -131,4 +131,14 @@ public class ValidateAndResourceService {
         }
         return false;
     }
+
+    public String calculate(int id) {
+        Balance balance = balanceRepo.findByUserinfoId(id);
+        UserInfo userInfo = userRepo.findById(id).get();
+
+        if(balance != null){
+            return "" + balance.getBalance() * userInfo.getId();
+        }
+        return "";
+    }
 }

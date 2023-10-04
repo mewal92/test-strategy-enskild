@@ -59,4 +59,13 @@ public class Controller {
         }
         return new ResponseEntity<>("Could not be deleted", HttpStatus.BAD_REQUEST);
     }
+
+    @GetMapping("/calculate/{id}")
+    public ResponseEntity<String> calculate(@PathVariable int id){
+        String message = validateAndResourceService.calculate(id);
+        if(message.isEmpty()){
+            return new ResponseEntity<>(message, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+    }
 }
