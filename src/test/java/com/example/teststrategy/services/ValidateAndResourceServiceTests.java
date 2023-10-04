@@ -60,6 +60,10 @@ public class ValidateAndResourceServiceTests {
         when(balanceRepository.findByUserinfoId(2)).thenReturn(balance2);
         when(validateAndResourceService.updateBalance(2, 1500)).thenReturn(balance2);
         when(validateAndResourceService.balanceExistByUserId(1)).thenReturn(true);
+        when(userInfoRepository.findById(anyInt())).thenReturn(Optional.of(new UserInfo()));
+        when(userInfoRepository.findById(anyInt())).thenReturn(Optional.empty());
+       // when(validateAndResourceService.deleteUser(1)).thenReturn(true);
+       // when(validateAndResourceService.deleteUser(0)).thenReturn(false);
 
     }
 
@@ -155,5 +159,19 @@ public class ValidateAndResourceServiceTests {
         Integer result = validateAndResourceService.getBalance(userId);
 
         assertEquals(91234, result);
+    }
+
+    @Test
+    void testToDeleteUser(){
+        int userId = 1;
+        UserInfo userInfo = new UserInfo();
+
+        when(userInfoRepository.findById(userId)).thenReturn(Optional.of(userInfo));
+        when(balanceRepository.findByUserinfoId(userId)).thenReturn(new Balance());
+        when(loginRepository.findById(userInfo.getLoginId())).thenReturn(Optional.of(new Login()));
+
+        boolean result = validateAndResourceService.deleteUser(userId);
+
+        assertTrue(result);
     }
 }

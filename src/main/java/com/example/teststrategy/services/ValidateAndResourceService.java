@@ -13,6 +13,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class ValidateAndResourceService {
@@ -21,7 +23,7 @@ public class ValidateAndResourceService {
     final private UserInfoRepository userRepo;
     final private BalanceRepository balanceRepo;
 
-    public boolean validateNewUser(NewUserRequest newUserRequest){
+    public boolean validateNewUser(NewUserRequest newUserRequest) {
         return isEmail(newUserRequest.getEmail()) &&
                 validatePasswordLength(newUserRequest.getPassword()) &&
                 validateCapital(newUserRequest.getPassword()) &&
@@ -30,38 +32,47 @@ public class ValidateAndResourceService {
                 validateAge(newUserRequest.getAge()) &&
                 emailExist(newUserRequest.getEmail());
     }
-    public boolean isEmail(String email){
+
+    public boolean isEmail(String email) {
         if (email == null) {
             return false;
         }
         String emailRegexPattern = "^[A-Za-z0-9+_.-]+@(.+)$";
         return email.matches(emailRegexPattern);
     }
-    public boolean validatePasswordLength(String password){
+
+    public boolean validatePasswordLength(String password) {
         return password != null && password.length() >= 5 && password.length() <= 30;
     }
-    public boolean validateNameLength(String name){
+
+    public boolean validateNameLength(String name) {
         return name != null && name.length() >= 2 && name.length() <= 20;
     }
-    public boolean validateCapital(String password){
+
+    public boolean validateCapital(String password) {
         return password != null && password.matches(".*[A-Z].*");
     }
-    public boolean validateSymbol(String password){
+
+    public boolean validateSymbol(String password) {
         return password != null && password.matches(".*[!@#$%^&*()\\[\\]{};:'\"<>,.?/~`_-].*");
     }
-    public boolean validateAge(int age){
+
+    public boolean validateAge(int age) {
         return age >= 18 && age <= 120;
     }
-    public boolean emailExist(String email){
+
+    public boolean emailExist(String email) {
         return !loginRepo.existsByEmail(email);
     }
-    public boolean authenticate(LoginRequest loginRequest){
+
+    public boolean authenticate(LoginRequest loginRequest) {
         Login login = loginRepo.findByEmail(loginRequest.getEmail());
-        if(login != null){
+        if (login != null) {
             return passwordEncoder.matches(loginRequest.getPassword(), login.getPassword());
         }
         return false;
     }
+
     public UserInfo register(NewUserRequest newUserRequest) {
         Login login = loginRepo.save(Login.builder()
                 .email(newUserRequest.getEmail())
@@ -101,5 +112,24 @@ public class ValidateAndResourceService {
 
     public Integer getBalance(int id) {
         return balanceRepo.findByUserinfoId(id).getBalance();
+    }
+
+
+    public boolean deleteUser (int userId) {
+        Optional<UserInfo> userInfoOptional = userRepo.findById(userId);
+        if (userInfoOptional.isPresent()) {
+            UserInfo userInfo = userInfoOptional.get();
+            Balance findBalance = balanceRepo.findByUserinfoId(userId);
+            Login findLogin = loginRepo.findById(userInfo.getLoginId()).orElse(null);
+
+            if (findLogin != null) {
+                userRepo.delete(userInfo);
+                balanceRepo.delete(findBalance);
+                loginRepo.delete(findLogin);
+                return true;
+            }
+        }
+        return false;
+
     }
 }

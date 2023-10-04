@@ -5,14 +5,17 @@ import com.example.teststrategy.models.UserInfo;
 import com.example.teststrategy.request.LoginRequest;
 import com.example.teststrategy.request.NewUserRequest;
 import com.example.teststrategy.request.SetBalanceRequest;
+import com.example.teststrategy.services.ValidateAndResourceService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -24,6 +27,8 @@ class ControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+
     @Test
     void createNewUser_ValidRequest_ShouldReturnOK() throws Exception {
         this.mockMvc.perform(post("/api/create")
@@ -35,10 +40,11 @@ class ControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json(
                         new ObjectMapper().writeValueAsString(
-                                new UserInfo(2,"han",25, 2)
+                                new UserInfo(2, "han", 25, 2)
                         )
                 ));
     }
+
     @Test
     void createNewUser_EmailAlreadyExist_ShouldReturnBAD() throws Exception {
         this.mockMvc.perform(post("/api/create")
@@ -129,7 +135,7 @@ class ControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json(
                         new ObjectMapper().writeValueAsString(
-                                new UserInfo(2,"han",25, 2)
+                                new UserInfo(2, "han", 25, 2)
                         )
                 ));
     }
@@ -162,7 +168,7 @@ class ControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json(
                         new ObjectMapper().writeValueAsString(
-                                new UserInfo(1,"hanna",25, 1)
+                                new UserInfo(1, "hanna", 25, 1)
                         )
                 ));
 
@@ -170,7 +176,7 @@ class ControllerTest {
         this.mockMvc.perform(put("/api/update-balance")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(
-                                new SetBalanceRequest(1,100)
+                                new SetBalanceRequest(1, 100)
                         )))
                 .andExpect(status().isOk())
                 .andExpect(content().json(
@@ -185,7 +191,7 @@ class ControllerTest {
         this.mockMvc.perform(put("/api/update-balance")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(
-                                new SetBalanceRequest(1,-100)
+                                new SetBalanceRequest(1, -100)
                         )))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().json(
@@ -194,6 +200,7 @@ class ControllerTest {
                         )
                 ));
     }
+
     @Test
     void getBalance_ValidRequest_ShouldReturnOK() throws Exception {
         Integer balance = 100;
@@ -219,4 +226,22 @@ class ControllerTest {
                         )
                 ));
     }
+
+    @Test
+    void deleteAccountShouldReturnOK() throws Exception {
+
+             mockMvc.perform(delete("/api/delete/1"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Account was deleted"));
+
+    }
+
+    @Test
+    void deleteAccountShouldReturnBAD() throws Exception {
+
+        mockMvc.perform(delete("/api/delete/0"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("Could not be deleted"));
+    }
 }
+

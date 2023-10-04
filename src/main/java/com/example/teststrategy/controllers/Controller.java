@@ -51,4 +51,12 @@ public class Controller {
         }
         return new ResponseEntity<>(new Balance(), HttpStatus.BAD_REQUEST);
     }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteAccount(@PathVariable int id) {
+        if (validateAndResourceService.deleteUser(id)) {
+            return new ResponseEntity<>("Account was deleted", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Could not be deleted", HttpStatus.BAD_REQUEST);
+    }
 }
