@@ -134,10 +134,13 @@ public class ValidateAndResourceService {
 
     public String calculate(int id) {
         Balance balance = balanceRepo.findByUserinfoId(id);
+        int i = balance.getBalance();
         UserInfo userInfo = userRepo.findById(id).get();
+        int b = userInfo.getAge();
 
-        if(balance != null){
-            return "" + balance.getBalance() + userInfo.getId();
+        if(i > b){
+            int c = i + b;
+            return "" + c;
         }
         return "";
     }
