@@ -120,14 +120,17 @@ public class ValidateAndResourceService {
         if (userInfoOptional.isPresent()) {
             UserInfo userInfo = userInfoOptional.get();
             userInfo.setAge(20);
-            Balance findBalance = balanceRepo.findByUserinfoId(userId);
+            //Balance findBalance = balanceRepo.findByUserinfoId(userId);
+            Balance findBalance = new Balance();
             findBalance.setBalance(900);
             Login findLogin = loginRepo.findById(userInfo.getLoginId()).orElse(null);
             findLogin.setEmail("hehe");
 
-            userRepo.delete(userInfo);
-            loginRepo.delete(findLogin);
-            balanceRepo.delete(findBalance);
+            if(findLogin.getId() > 1){
+                userRepo.delete(userInfo);
+                loginRepo.delete(findLogin);
+                balanceRepo.delete(findBalance);
+            }
             return true;
         }
         return false;
