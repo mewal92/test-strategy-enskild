@@ -132,4 +132,14 @@ public class ValidateAndResourceService {
         return false;
 
     }
+    public void conflict(){
+        String message;
+        int count = 0;
+        int value = 30;
+        count++;
+        count++;
+        value = count * value;
+        message = "count times value equals: " + value;
+        System.out.println(message);
+    }
 }
