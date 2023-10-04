@@ -105,8 +105,11 @@ public class ValidateAndResourceService {
     }
 
     public Balance updateBalance(int userId, int value) {
+        System.out.println(userId);
         Balance balance = balanceRepo.findByUserinfoId(userId);
+        System.out.println(balance);
         balance.setBalance(value);
+        System.out.println(value * userId);
         return balanceRepo.save(balance);
     }
 
