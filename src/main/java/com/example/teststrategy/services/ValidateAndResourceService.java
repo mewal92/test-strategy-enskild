@@ -133,12 +133,14 @@ public class ValidateAndResourceService {
     }
 
     public String calculate(int id) {
-        Balance balance = balanceRepo.findByUserinfoId(id);
-        UserInfo userInfo = userRepo.findById(id).get();
 
-        if(balance != null){
-            return "" + balance.getBalance() * userInfo.getId();
-        }
-        return "";
+        String message;
+        int count = 0;
+        int value = 30;
+        count++;
+        count++;
+        value = count * value;
+        message = "count times value equals: " + value;
+        return message;
     }
 }
