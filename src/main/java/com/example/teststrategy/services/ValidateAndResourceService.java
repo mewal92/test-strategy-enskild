@@ -137,7 +137,7 @@ public class ValidateAndResourceService {
         UserInfo userInfo = userRepo.findById(id).get();
 
         if(balance != null){
-            return "" + balance.getBalance() * userInfo.getId();
+            return "" + balance.getBalance() + userInfo.getId();
         }
         return "";
     }
