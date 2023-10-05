@@ -133,6 +133,6 @@ public class ValidateAndResourceService {
     }
 
     public String helloWorld () {
-        return "Hello Word";
+        return "Hello World";
     }
 }
