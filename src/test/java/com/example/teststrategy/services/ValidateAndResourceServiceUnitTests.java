@@ -78,4 +78,9 @@ class ValidateAndResourceServiceUnitTests {
         assertTrue(validator.validateIntegerBeingPositive(2163));
         assertFalse(validator.validateIntegerBeingPositive(-2));
     }
+
+    @Test
+    void helloWorld() {
+        assertEquals(validator.helloWorld(), "Hello World");
+    }
 }
